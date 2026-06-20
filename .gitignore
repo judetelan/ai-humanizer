@@ -1,0 +1,8 @@
+# runtime output
+.ai-humanizer/
+.impeccable/
+
+# deps / os
+node_modules/
+.DS_Store
+*.log
