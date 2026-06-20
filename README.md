@@ -9,6 +9,28 @@ and as portable instructions for ChatGPT and Gemini.
 > read as AI. Use it to make your own writing clearer — not to misrepresent AI work as
 > human where honesty is required.
 
+## Quickest start — give an LLM this link
+
+Paste this raw link into **Claude, ChatGPT, or Gemini** and tell it to use the skill:
+
+```
+https://raw.githubusercontent.com/judetelan/ai-humanizer/main/portable/ai-humanizer.md
+```
+
+> Read this and use it to humanize the text I paste next: <link above>
+
+That file is self-contained (rewrite levers + an embedded Python scorer that runs in any
+code tool). Use the **raw** link, not the `github.com/.../blob/...` page — raw returns
+plain markdown, the blob URL returns an HTML page the model has to wade through.
+
+**Raw links for every file** (pattern: `https://raw.githubusercontent.com/judetelan/ai-humanizer/main/<path>`):
+
+| File | Raw URL |
+|---|---|
+| Portable (paste into any LLM) | `…/main/portable/ai-humanizer.md` |
+| Skill manifest | `…/main/SKILL.md` |
+| Banned-words reference | `…/main/references/banned-words.md` |
+
 ## What it catches
 
 - **Lexical:** AI-spike vocabulary (delve, leverage, robust, seamless), throat-clearing
