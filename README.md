@@ -62,37 +62,59 @@ genuine human prose       →  0/100  Human
 
 ## Install & use
 
-### Claude Code
+### Claude Code (skill)
 
-Clone into your skills directory so the folder is `~/.claude/skills/ai-humanizer` (global)
-or `<project>/.claude/skills/ai-humanizer` (per-project):
+**1. Install.** Clone the repo into a skills directory. The folder name becomes the skill
+name, so it must be `ai-humanizer`:
 
 ```bash
+# Global — available in every project:
 git clone https://github.com/judetelan/ai-humanizer.git ~/.claude/skills/ai-humanizer
+
+# …or per-project — committed alongside one repo:
+git clone https://github.com/judetelan/ai-humanizer.git .claude/skills/ai-humanizer
 ```
 
-Then just ask in natural language — "humanize this README", "is this AI?", "de-slop my
-landing copy" — or call a command:
+Requires **Node 18+** (the detector is plain Node, no `npm install`).
 
-| Command | Does |
-|---|---|
-| `humanize [target]` | detect tells, then rewrite them out |
-| `check [target]` | forensic score + evidence (read-only) |
-| `audit [target]` | batch-scan a dir/glob, rank worst offenders |
+**2. Confirm Claude Code sees it.** Start (or restart) Claude Code in that scope and run:
 
-Run the detector directly:
+```
+/skills
+```
+
+`ai-humanizer` should appear in the list. Claude reads the skill's `SKILL.md` and loads it
+automatically when your request matches — you don't have to do anything else.
+
+**3. Use it — just ask in plain language.** No special syntax needed:
+
+> humanize this README
+> is this AI-written? &nbsp;·&nbsp; score this draft &nbsp;·&nbsp; de-slop my landing copy &nbsp;·&nbsp; audit all docs in /blog
+
+Claude routes the request to the right command:
+
+| Say something like… | Command it runs | What you get |
+|---|---|---|
+| "humanize / de-slop / clean up X" | `humanize [target]` | detects tells, then rewrites them out, with a before/after slop score |
+| "is this AI? / score / check X" | `check [target]` | read-only forensic score + per-line evidence (no edits) |
+| "audit / scan all my docs" | `audit [target]` | batch-scans a dir/glob and ranks the worst offenders |
+
+The target can be a file path, a glob, or text you paste directly into the chat.
+
+**4. (Optional) run the detector yourself.** The skill is also a standalone CLI:
 
 ```bash
+cd ~/.claude/skills/ai-humanizer
 node scripts/humanize-detect.mjs --mode prose --features path/to/file.md
 node scripts/humanize-detect.mjs --mode marketing --gpt path/to/page.html
 echo "your text" | node scripts/humanize-detect.mjs --stdin --mode both
 ```
 
 Flags: `--mode prose|marketing|both`, `--gpt|--claude|--gemini`, `--features`, `--trend`,
-`--json`. Exit code `0` clean / `2` findings (CI-friendly). Requires Node 18+.
+`--json`. Exit code `0` clean / `2` findings (CI-friendly).
 
-**Optional auto-scan hook** — flag tells automatically after you write `.md/.txt/.html`.
-Add to `.claude/settings.json` (or `settings.local.json`):
+**5. (Optional) auto-scan hook** — flag tells automatically after Claude writes any
+`.md/.txt/.html` file. Add to `.claude/settings.json` (or `settings.local.json`):
 
 ```json
 {
