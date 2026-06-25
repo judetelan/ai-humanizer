@@ -1,6 +1,6 @@
 ---
 name: ai-humanizer
-description: Detects and removes AI writing tells so text reads like a human wrote it. Use when the user wants to humanize, de-slop, de-AI, score, audit, or clean up writing — prose (docs, READMEs, articles, emails) or marketing/web copy. Covers em-dash overuse, AI vocabulary (delve/leverage/robust), throat-clearing openers (moreover/furthermore), SaaS buzzwords, hedging, uniform sentence rhythm, lexical diversity, the "not X, but Y" cadence, rule-of-three, emoji decoration, and model-specific tics. Pairs a deterministic two-engine detector with rewrite guidance, modeled on the impeccable design skill.
+description: Detects and removes AI writing tells so text reads like a human wrote it. Use when the user wants to humanize, de-slop, de-AI, score, audit, or clean up writing — prose (docs, READMEs, articles, emails) or marketing/web copy. Covers em-dash overuse, AI vocabulary (delve/leverage/robust), throat-clearing openers (moreover/furthermore), SaaS buzzwords, hedging, uniform sentence rhythm, lexical diversity, the "not X, but Y" cadence, rule-of-three, emoji decoration, model-specific tics, plus editorial tells absorbed from stop-slop — passive voice, false agency ("the data tells us"), empty adverbs, vague declaratives, meta-commentary, rhetorical setups, negative listing, and lazy extremes. Pairs a deterministic two-engine detector with rewrite guidance, modeled on the impeccable design skill.
 ---
 
 # AI Humanizer
@@ -67,7 +67,7 @@ per-finding line + sample. Exit `0` clean / `2` findings (CI-friendly).
 
 Full lexicons + rationale: [references/banned-words.md](references/banned-words.md).
 
-## The nine rewrite levers
+## The rewrite levers
 
 1. **Cut throat-clearing openers** — *Certainly, In today's world, It's worth noting,
    Moreover, Furthermore.* Start on the assertion.
@@ -83,8 +83,30 @@ Full lexicons + rationale: [references/banned-words.md](references/banned-words.
    uncertainty is real; then state it specifically.
 7. **Break the rule-of-three** — stop defaulting to "X, Y, and Z" triads.
 8. **Drop aphoristic cadence** — "It's not just a tool. It's a revolution." / "No fluff.
-   Just results." Say it plainly.
+   Just results." Say it plainly. Same for negative listing ("Not X… Not Y… Z") and
+   dramatic fragmentation ("That's it. That's the…").
 9. **Strip decoration** — emoji bullets, ✓/🚀 badges, 01/02/03 markers with no real order.
+10. **Use active voice, name the actor** — kill agentless passives ("mistakes were made") and
+    false agency ("the data tells us", "the decision emerges"). A person did it — say who.
+11. **Cut empty adverbs & lazy extremes** — *really, just, simply, actually, genuinely*; and
+    sweeping absolutes (*everyone, always, never*). Replace with the specific.
+12. **Be specific, not portentous** — drop vague declaratives ("the implications are
+    significant"), meta-commentary ("the rest of this essay…"), rhetorical setups ("what if
+    I told you", "think about it"), and emphasis crutches ("let that sink in"). Name the
+    concrete thing; let the reader draw the conclusion.
+
+### Human-judgment rubric (absorbed from stop-slop)
+
+The numeric slop score catches patterns; this rubric catches what regex can't. After a
+rewrite, rate each 1–10 — below ~7 on any axis, revise:
+
+| Dimension | Question |
+|---|---|
+| **Directness** | Statements, or announcements about statements? |
+| **Rhythm** | Varied sentence lengths, or metronomic? |
+| **Trust** | Does it respect the reader's intelligence (no hand-holding)? |
+| **Authenticity** | Does a person sound like they wrote this? |
+| **Density** | Anything cuttable without losing meaning? |
 
 ## Triage — not every match is a defect
 

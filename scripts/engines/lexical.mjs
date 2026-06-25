@@ -11,7 +11,9 @@ import { finding, lineOf, sampleAround, countPhrases } from '../shared/text.mjs'
 import {
   BANNED_VOCAB, AI_OPENERS, BUZZWORDS, HEDGES, GPT_TICS, CLAUDE_TICS, GEMINI_TICS,
   WORDY_CONNECTIVES, WEASEL_ATTRIBUTION, COPULA_AVOID, CHATBOT_CLOSERS,
-  CONCLUSION_FLUFF, BUSINESS_JARGON,
+  CONCLUSION_FLUFF, BUSINESS_JARGON, ADVERB_FILLER, LAZY_EXTREMES, META_COMMENTARY,
+  RHETORICAL_SETUP, EMPHASIS_CRUTCH, VAGUE_DECLARATIVE,
+  FALSE_AGENCY_NOUNS, FALSE_AGENCY_VERBS,
 } from '../lexicons.mjs';
 
 function phraseFinding(ctx, id, severity, phrases, label, opts = {}) {
@@ -201,6 +203,115 @@ const DETECTORS = {
     if (hits.length < 3) return [];
     return [finding('emoji-decoration', 'info',
       `${hits.length} decorative emoji/symbols. Drop emoji bullets and section badges; they read as AI formatting.`, 0, '', hits.length)];
+  },
+
+  // ── Absorbed from stop-slop (hardikpandya/stop-slop, MIT) ─────────────────
+
+  'adverb-filler'(ctx) {
+    const hits = countPhrases(ctx.text, ADVERB_FILLER, { wordBoundary: true });
+    const rate = hits.length / Math.max(1, ctx.wordCount / 100);
+    if (hits.length < 4 || rate < 0.8) return [];
+    const uniq = [...new Set(hits.map((h) => h.phrase))];
+    return [finding('adverb-filler', 'advisory',
+      `${hits.length} empty intensifier(s) (~${rate.toFixed(1)} per 100 words): ${uniq.slice(0, 8).join(', ')}. Cut adverbs that only add emphasis (really, just, simply, actually).`,
+      lineOf(ctx.raw, hits[0].index), sampleAround(ctx.text, hits[0].index, hits[0].phrase.length), hits.length)];
+  },
+
+  'lazy-extremes'(ctx) {
+    const hits = countPhrases(ctx.text, LAZY_EXTREMES, { wordBoundary: true });
+    if (hits.length < 4) return [];
+    const uniq = [...new Set(hits.map((h) => h.phrase))];
+    return [finding('lazy-extremes', 'advisory',
+      `${hits.length} sweeping absolute(s): ${uniq.slice(0, 6).join(', ')}. Replace false-authority extremes (everyone/always/never) with specifics.`,
+      lineOf(ctx.raw, hits[0].index), sampleAround(ctx.text, hits[0].index, hits[0].phrase.length), hits.length)];
+  },
+
+  'meta-commentary'(ctx) {
+    return phraseFinding(ctx, 'meta-commentary', 'info', META_COMMENTARY, 'meta-commentary aside(s)',
+      { advice: 'Cut self-referential asides; let the text move instead of narrating itself.' });
+  },
+
+  'rhetorical-setup'(ctx) {
+    return phraseFinding(ctx, 'rhetorical-setup', 'warning', RHETORICAL_SETUP, 'rhetorical setup(s)',
+      { advice: 'Make the point directly; let the reader draw the conclusion.' });
+  },
+
+  'emphasis-crutch'(ctx) {
+    return phraseFinding(ctx, 'emphasis-crutch', 'info', EMPHASIS_CRUTCH, 'emphasis crutch(es)',
+      { advice: 'Delete; the claim should carry its own weight.' });
+  },
+
+  'vague-declarative'(ctx) {
+    const re = /\bthe (?:reasons?|implications?|stakes?|consequences?|impact|significance|importance|problem|challenge|risks?) (?:is|are|could not be|couldn't be|cannot be|can't be) (?:significant|structural|profound|clear|real|high|higher|immense|considerable|enormous|overstated|deep|deeper|deepest|complex|vast)\b/gi;
+    let count = 0, first = -1, sample = '', m;
+    while ((m = re.exec(ctx.text)) !== null) { count++; if (first < 0) { first = m.index; sample = m[0]; } }
+    const phr = countPhrases(ctx.text, VAGUE_DECLARATIVE);
+    count += phr.length;
+    if (first < 0 && phr.length) { first = phr[0].index; sample = phr[0].phrase; }
+    if (count < 1) return [];
+    return [finding('vague-declarative', 'info',
+      `${count} vague declarative(s) that announce importance without the specific. Name the concrete thing instead.`,
+      lineOf(ctx.raw, Math.max(0, first)), sample.slice(0, 60), count)];
+  },
+
+  'false-agency'(ctx) {
+    const re = new RegExp(`\\bthe (${FALSE_AGENCY_NOUNS.join('|')}) (${FALSE_AGENCY_VERBS.join('|')})\\b`, 'gi');
+    let count = 0, first = -1, sample = '', m;
+    while ((m = re.exec(ctx.text)) !== null) { count++; if (first < 0) { first = m.index; sample = m[0]; } }
+    if (count < 2) return [];
+    return [finding('false-agency', 'warning',
+      `${count} inanimate-subject construction(s) ("${sample}…"). Things don't act — name the person who does.`,
+      lineOf(ctx.raw, Math.max(0, first)), sample, count)];
+  },
+
+  'passive-voice'(ctx) {
+    const re = /\b(?:is|are|was|were|be|been|being)\s+(?:\w+ly\s+)?(created|made|designed|built|written|reached|driven|shaped|believed|considered|regarded|viewed|seen|known|described|defined|characterized|achieved|conducted|performed|implemented|developed|established|generated|produced|determined|provided|required|caused|enabled|leveraged)\b/gi;
+    let count = 0, first = -1, sample = '', m;
+    while ((m = re.exec(ctx.text)) !== null) { count++; if (first < 0) { first = m.index; sample = m[0]; } }
+    const rate = count / Math.max(1, ctx.wordCount / 120);
+    if (count < 3 || rate < 1) return [];
+    return [finding('passive-voice', 'advisory',
+      `${count} passive construction(s) (~${rate.toFixed(1)} per 120 words). Find the actor and put them at the front of the sentence.`,
+      lineOf(ctx.raw, Math.max(0, first)), sample, count)];
+  },
+
+  'wh-opener'(ctx) {
+    const sents = ctx.sentences;
+    if (sents.length < 6) return [];
+    let count = 0;
+    for (const s of sents) if (/^(?:What|When|Where|Which|Who|Why|How)\b/.test(s) && !s.endsWith('?')) count++;
+    const rate = count / sents.length;
+    if (count < 3 || rate < 0.18) return [];
+    return [finding('wh-opener', 'advisory',
+      `${count} of ${sents.length} sentences open with a Wh- word (What/When/Why/How…) as a crutch. Lead with the subject or name the specific.`, 0, '', count)];
+  },
+
+  'negative-listing'(ctx) {
+    const re1 = /\b(Not (?:a|an|just|only|because)\b[^.!?]{1,50}[.!?]\s+){2,}/g;
+    const re2 = /\b(It wasn'?t\b[^.!?]{1,50}[.!?]\s+){2,}/gi;
+    let count = 0, first = -1, sample = '', m;
+    for (const re of [re1, re2]) {
+      re.lastIndex = 0;
+      while ((m = re.exec(ctx.text)) !== null) { count++; if (first < 0) { first = m.index; sample = m[0].slice(0, 70); } }
+    }
+    if (count < 1) return [];
+    return [finding('negative-listing', 'warning',
+      `${count} negation-buildup list(s) ("Not X… Not Y… Z"). A rhetorical striptease; state Z directly and drop the runway.`,
+      lineOf(ctx.raw, Math.max(0, first)), sample, count)];
+  },
+
+  'dramatic-fragmentation'(ctx) {
+    const re1 = /\bThat'?s it\.\s+That'?s (?:the|it|all|what)\b/gi;
+    const re2 = /\b[A-Z][a-z]+\.\s+And [a-z]+\.\s+And [a-z]+\./g;
+    let count = 0, first = -1, sample = '', m;
+    for (const re of [re1, re2]) {
+      re.lastIndex = 0;
+      while ((m = re.exec(ctx.text)) !== null) { count++; if (first < 0) { first = m.index; sample = m[0].slice(0, 60); } }
+    }
+    if (count < 1) return [];
+    return [finding('dramatic-fragmentation', 'info',
+      `${count} dramatic-fragmentation pattern(s) ("That's it. That's the…" / "X. And y. And z."). Use complete sentences; trust the content.`,
+      lineOf(ctx.raw, Math.max(0, first)), sample, count)];
   },
 };
 

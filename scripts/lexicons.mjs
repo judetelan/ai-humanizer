@@ -45,6 +45,9 @@ export const AI_OPENERS = [
   "indeed,", "interestingly,", "remarkably,", "essentially,", "fundamentally,",
   "inherently,", "conversely,", "that said,", "in essence,", "simply put,",
   "to put it simply,", "in other words,",
+  // stop-slop throat-clearers
+  "it turns out", "the truth is", "let's be honest", "can we talk about",
+  "the real question is", "in a world where",
 ];
 
 // SaaS marketing filler.
@@ -121,7 +124,81 @@ export const BUSINESS_JARGON = [
   'double down', 'double-click', 'lean into', 'on the same page',
   'low-hanging fruit', 'north star', 'learnings', 'paradigm shift',
   'commitment to excellence', 'synergy', 'leverage synergies',
+  // stop-slop additions
+  'take a step back',
 ];
+
+// Empty intensifiers — adverbs that add emphasis but no meaning (stop-slop).
+// Single common words; the rule is density-gated to avoid false positives.
+export const ADVERB_FILLER = [
+  'really', 'just', 'literally', 'genuinely', 'honestly', 'simply', 'actually',
+  'truly', 'deeply', 'basically', 'totally', 'frankly', 'surely', 'undoubtedly',
+];
+
+// Lazy extremes — sweeping absolutes that fake authority (stop-slop).
+export const LAZY_EXTREMES = [
+  'everyone', 'everybody', 'nobody', 'no one', 'always', 'never',
+  'every single', 'without exception', 'each and every', 'everything', 'nothing',
+];
+
+// Meta-commentary — self-referential asides about the text's own structure (stop-slop).
+export const META_COMMENTARY = [
+  'the rest of this essay', 'walk you through',
+  'in this section', 'in this post', 'in this article', "as we'll see",
+  'as we will see', 'i want to explore', 'plot twist:', 'spoiler:',
+  'you already know this', "but that's another post", 'let me explain',
+];
+
+// Rhetorical setups — announce insight instead of delivering it (stop-slop).
+export const RHETORICAL_SETUP = [
+  'what if i told you', "here's what i mean", 'think about it', "and that's okay",
+  'ask yourself', "here's the kicker", "here's the catch", 'hear me out',
+  'let that marinate', 'buckle up',
+];
+
+// Emphasis crutches — manufactured weight that carries no information (stop-slop).
+export const EMPHASIS_CRUTCH = [
+  'full stop.', 'let that sink in', 'make no mistake', 'this matters because',
+  "here's why that matters", 'let me be clear', "i'll say it again", 'read that again',
+  'the uncomfortable truth is', 'plain and simple', 'mark my words',
+];
+
+// Vague declaratives — announce significance without naming the specific thing (stop-slop).
+export const VAGUE_DECLARATIVE = [
+  'the reasons are structural', 'the implications are significant',
+  'the stakes are high', 'the consequences are real', 'this is the deepest problem',
+  "the stakes couldn't be higher", 'the stakes could not be higher',
+  'the significance cannot be overstated', 'the importance cannot be overstated',
+];
+
+// False agency — inanimate subjects given human verbs (stop-slop). Matched as
+// "the <noun> <verb>" in the engine; lists kept here for maintainability.
+export const FALSE_AGENCY_NOUNS = [
+  'data', 'market', 'markets', 'culture', 'conversation', 'decision', 'complaint',
+  'narrative', 'story', 'algorithm', 'technology', 'system', 'process', 'numbers',
+  'metrics', 'code', 'model', 'product', 'strategy', 'truth', 'answer', 'question',
+];
+export const FALSE_AGENCY_VERBS = [
+  'tells', 'rewards', 'decides', 'emerges', 'shifts', 'moves', 'knows', 'wants',
+  'believes', 'demands', 'chooses', 'understands', 'realizes', 'feels', 'thinks',
+  'speaks', 'listens', 'reveals', 'suggests', 'reminds', 'becomes', 'punishes',
+];
+
+// Business jargon → plain replacements (stop-slop). Drives rewrite guidance; the
+// keys also feed the business-jargon detector via BUSINESS_JARGON above.
+export const JARGON_SWAPS = {
+  'navigate': 'handle, address',
+  'unpack': 'explain, examine',
+  'lean into': 'accept, embrace',
+  'landscape': 'situation, field',
+  'game-changer': 'significant, important',
+  'double down': 'commit, increase',
+  'deep dive': 'analysis, examination',
+  'take a step back': 'reconsider',
+  'moving forward': 'next, from now',
+  'circle back': 'return to, revisit',
+  'on the same page': 'aligned, agreed',
+};
 
 // Model-specific tics, gated off by default (--gpt / --claude / --gemini).
 export const GPT_TICS = [

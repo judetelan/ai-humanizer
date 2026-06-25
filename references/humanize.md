@@ -14,11 +14,17 @@ author's voice.
    `--trend` writes the score to `.ai-humanizer/scores/` so you can show before/after.
 3. **Triage each finding.** Real tell → fix. Contextual false positive → keep, say why
    (quoted bad words, literal domain terms, code the stripper missed).
-4. **Rewrite with the nine levers** (see SKILL.md): cut openers, drop AI vocab, vary
-   rhythm, normalize em-dashes, kill buzzwords, hedge surgery, break rule-of-three, drop
-   aphoristic cadence, strip decoration. Preserve meaning; don't flatten real voice.
+4. **Rewrite with the levers** (see SKILL.md): cut openers, drop AI vocab, vary rhythm,
+   normalize em-dashes, kill buzzwords, hedge surgery, break rule-of-three, drop aphoristic
+   cadence, strip decoration, use active voice (name the actor), cut empty adverbs and lazy
+   extremes, and be specific (no vague declaratives / meta-commentary / rhetorical setups).
+   For jargon, use the swap table in [references/banned-words.md](banned-words.md). Preserve
+   meaning; don't flatten real voice.
 5. **Re-detect & report.** Run again with `--trend`; report the movement, e.g.
    *"slop 63 → 8, AI slop → Likely human."* Quote 2–3 concrete before/after lines.
+6. **Apply the human-judgment rubric** (SKILL.md): rate Directness, Rhythm, Trust,
+   Authenticity, Density 1–10. The score catches patterns; the rubric catches what regex
+   can't.
 
 ## Rules
 

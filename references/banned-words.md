@@ -89,6 +89,95 @@ Two or more is the trigger. Assert directly, or state real, specific uncertainty
 `circle back` · `double down` · `lean into` · `low-hanging fruit` · `north star` ·
 `learnings` · `paradigm shift` · `commitment to excellence` · `synergy`
 
+## Empty intensifiers (prose mode, density-gated)
+
+Adverbs that add emphasis but no meaning. Four+ (≈0.8 per 100 words) triggers it. Cut them.
+
+`really` · `just` · `literally` · `genuinely` · `honestly` · `simply` · `actually` ·
+`truly` · `deeply` · `basically` · `totally` · `frankly` · `surely` · `undoubtedly`
+
+## Lazy extremes (prose mode, density-gated)
+
+Sweeping absolutes that fake authority. Name specifics instead. Four+ triggers it.
+
+`everyone` · `everybody` · `nobody` · `no one` · `always` · `never` · `every single` ·
+`without exception` · `each and every` · `everything` · `nothing`
+
+## Meta-commentary (cut self-referential asides)
+
+The text should move, not narrate its own structure.
+
+`the rest of this essay` · `walk you through` · `in this section` · `in this post` ·
+`in this article` · `as we'll see` · `i want to explore` · `plot twist:` · `spoiler:` ·
+`you already know this` · `but that's another post` · `let me explain`
+
+## Rhetorical setups (make the point directly)
+
+Phrases that announce insight instead of delivering it.
+
+`what if I told you` · `here's what I mean` · `think about it` · `and that's okay` ·
+`ask yourself` · `here's the kicker` · `here's the catch` · `hear me out` ·
+`let that marinate` · `buckle up`
+
+## Emphasis crutches (delete — the claim carries itself)
+
+`full stop.` · `let that sink in` · `make no mistake` · `this matters because` ·
+`here's why that matters` · `let me be clear` · `I'll say it again` · `read that again` ·
+`the uncomfortable truth is` · `plain and simple` · `mark my words`
+
+## Vague declaratives (name the concrete thing)
+
+Announcing significance without the specific. Also pattern-matched ("the <noun> is/are
+<abstract adjective>").
+
+`the reasons are structural` · `the implications are significant` · `the stakes are high` ·
+`the consequences are real` · `this is the deepest problem` · `the stakes couldn't be higher` ·
+`the significance/importance cannot be overstated`
+
+## False agency (name the actor — things don't act)
+
+Pattern-matched as `the <noun> <verb>` (two+ triggers it). Inanimate subjects given human
+verbs hide who actually did something.
+
+- **Nouns:** data · market(s) · culture · conversation · decision · complaint · narrative ·
+  story · algorithm · technology · system · process · numbers · metrics · code · model ·
+  product · strategy · truth · answer · question
+- **Verbs:** tells · rewards · decides · emerges · shifts · moves · knows · wants · believes ·
+  demands · chooses · understands · realizes · feels · thinks · speaks · listens · reveals ·
+  suggests · reminds · becomes · punishes
+
+**Examples:** "the data tells us" → "we read the data as…" · "the decision emerges" → "the
+team decided" · "the market rewards speed" → "buyers pay for speed."
+
+## Passive voice (find the actor; put them first — prose mode, density-gated)
+
+Agentless passives drain energy and hide who acted. Matched as be-verb + a curated set of
+participles (created, made, designed, built, written, reached, believed, considered, etc.).
+Three+ (≈1 per 120 words) triggers it.
+
+## Wh- opener crutch (lead with the subject — prose mode)
+
+Many non-question sentences opening with What/When/Where/Which/Who/Why/How. Three+ and ≥18%
+of sentences triggers it. Restructure: "What makes this hard is X" → name X.
+
+## Jargon → plain (rewrite swaps)
+
+stop-slop's replacement table, used when humanizing:
+
+| Avoid | Use instead |
+|-------|-------------|
+| navigate (challenges) | handle, address |
+| unpack (analysis) | explain, examine |
+| lean into | accept, embrace |
+| landscape (context) | situation, field |
+| game-changer | significant, important |
+| double down | commit, increase |
+| deep dive | analysis, examination |
+| take a step back | reconsider |
+| moving forward | next, from now |
+| circle back | return to, revisit |
+| on the same page | aligned, agreed |
+
 ## Model-specific tics (gated: --gpt / --claude / --gemini)
 
 - **GPT:** `rich tapestry` · `navigating the complexities` · `plays a crucial/vital role` ·
@@ -104,6 +193,9 @@ Two or more is the trigger. Assert directly, or state real, specific uncertainty
 - **Rule-of-three** — reflexive "X, Y, and Z" triads. Break the pattern.
 - **Aphoristic cadence** — "Not an X. A Y." / "No fluff. Just results." / "It's not just
   X, it's Y." Manufactured contrast.
+- **Negative listing** — "Not X… Not Y… Z." A rhetorical striptease; state Z directly.
+- **Dramatic fragmentation** — "That's it. That's the…" / "X. And y. And z." Fragments for
+  performative profundity.
 - **Numbered 01/02/03 markers** — only earn their place when order carries meaning.
 - **Emoji decoration** — emoji bullets and ✓/🚀 section badges.
 

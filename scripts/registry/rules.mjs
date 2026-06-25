@@ -124,6 +124,63 @@ const RULES = [
     description: 'Repeated "**Label:** description" bullets are an AI formatting reflex. Use prose or plain lists.',
   },
 
+  // ── Absorbed from stop-slop (editorial tells) ─────────────────────────────
+  {
+    id: 'false-agency', category: 'lexical', engine: 'lexical', severity: 'warning',
+    name: 'False agency', modes: ['prose', 'marketing', 'both'], weight: 4,
+    description: 'Inanimate subjects given human verbs ("the data tells us", "the decision emerges"). Name the person who acts.',
+  },
+  {
+    id: 'rhetorical-setup', category: 'cadence', engine: 'lexical', severity: 'warning',
+    name: 'Rhetorical setup', modes: ['prose', 'marketing', 'both'], weight: 4,
+    description: 'Phrases that announce insight instead of delivering it ("what if I told you", "think about it"). Make the point directly.',
+  },
+  {
+    id: 'negative-listing', category: 'cadence', engine: 'lexical', severity: 'warning',
+    name: 'Negative listing', modes: ['prose', 'marketing', 'both'], weight: 5,
+    description: 'Negation buildup ("Not X… Not Y… Z") — a rhetorical striptease. State Z directly and drop the runway.',
+  },
+  {
+    id: 'vague-declarative', category: 'lexical', engine: 'lexical', severity: 'info',
+    name: 'Vague declarative', modes: ['prose', 'both'], weight: 3,
+    description: 'Announcing significance without the specific ("the implications are significant"). Name the concrete thing.',
+  },
+  {
+    id: 'meta-commentary', category: 'lexical', engine: 'lexical', severity: 'info',
+    name: 'Meta-commentary', modes: ['prose', 'marketing', 'both'], weight: 3,
+    description: 'Self-referential asides about the text\'s own structure ("the rest of this essay…", "let me walk you through"). Cut them.',
+  },
+  {
+    id: 'emphasis-crutch', category: 'lexical', engine: 'lexical', severity: 'info',
+    name: 'Emphasis crutch', modes: ['prose', 'marketing', 'both'], weight: 3,
+    description: 'Manufactured weight that carries no information ("let that sink in", "make no mistake"). Delete.',
+  },
+  {
+    id: 'dramatic-fragmentation', category: 'cadence', engine: 'lexical', severity: 'info',
+    name: 'Dramatic fragmentation', modes: ['prose', 'marketing', 'both'], weight: 3,
+    description: 'Fragments for performative profundity ("That\'s it. That\'s the…", "X. And y. And z."). Use complete sentences.',
+  },
+  {
+    id: 'adverb-filler', category: 'lexical', engine: 'lexical', severity: 'advisory',
+    name: 'Empty intensifiers', modes: ['prose', 'both'], weight: 2,
+    description: 'Adverbs that only add emphasis (really, just, simply, actually, genuinely). Density-gated; cut them.',
+  },
+  {
+    id: 'lazy-extremes', category: 'lexical', engine: 'lexical', severity: 'advisory',
+    name: 'Lazy extremes', modes: ['prose', 'both'], weight: 2,
+    description: 'Sweeping absolutes faking authority (everyone/always/never/nobody). Replace with specifics.',
+  },
+  {
+    id: 'passive-voice', category: 'stylometry', engine: 'lexical', severity: 'advisory',
+    name: 'Passive voice', modes: ['prose', 'both'], weight: 2,
+    description: 'Agentless passives ("was created", "is believed") hide the actor and drain energy. Density-gated; find the actor.',
+  },
+  {
+    id: 'wh-opener', category: 'cadence', engine: 'lexical', severity: 'advisory',
+    name: 'Wh- opener crutch', modes: ['prose', 'both'], weight: 2,
+    description: 'Many sentences opening with What/When/Why/How as a crutch. Lead with the subject or name the specific.',
+  },
+
   // ── Stylometry ───────────────────────────────────────────────────────────
   {
     id: 'uniform-rhythm', category: 'stylometry', engine: 'stylometry', severity: 'info',

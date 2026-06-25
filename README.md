@@ -1,7 +1,7 @@
 # ai-humanizer
 
 Detect and remove AI writing tells so text reads like a person wrote it. A deterministic
-detector (two engines, a 29-rule registry, score trends) paired with rewrite guidance.
+detector (two engines, a 40-rule registry, score trends) paired with rewrite guidance.
 Works as a [Claude Agent Skill](https://docs.claude.com/en/docs/agents-and-tools/agent-skills)
 and as portable instructions for ChatGPT and Gemini.
 
@@ -35,9 +35,14 @@ plain markdown, the blob URL returns an HTML page the model has to wade through.
 
 - **Lexical:** AI-spike vocabulary (delve, leverage, robust, seamless), throat-clearing
   openers (Moreover, In today's world), SaaS buzzwords, hedging, wordy connectives,
-  weasel attribution, assistant-register closers, business jargon.
+  weasel attribution, assistant-register closers, business jargon, empty adverbs (really,
+  just, simply), lazy extremes (everyone/always/never), vague declaratives, meta-commentary,
+  emphasis crutches.
 - **Cadence:** em-dash overuse, the "not X, but Y" aphorism, rule-of-three, participial
-  trailers.
+  trailers, rhetorical setups ("what if I told you"), negative listing ("Not X… Not Y… Z"),
+  dramatic fragmentation, Wh- opener crutch.
+- **Voice:** passive voice ("mistakes were made"), false agency ("the data tells us", "the
+  decision emerges").
 - **Formatting:** emoji decoration, bold-label lists, numbered 01/02/03 markers,
   **LLM-artifact leaks** (`citeturn`, `utm_source=chatgpt.com`, `[Your Name]`),
   smart-punctuation/zero-width fingerprints.
@@ -126,12 +131,16 @@ The Node CLI won't run in ChatGPT, but the guidance + Python scorer port cleanly
 
 ---
 
-## The nine rewrite levers
+## The rewrite levers
 
 1. Cut throat-clearing openers. 2. Drop AI vocabulary. 3. Vary sentence rhythm
 (burstiness). 4. Normalize em-dashes. 5. Kill marketing buzzwords. 6. Do hedge surgery.
-7. Break the rule-of-three. 8. Drop aphoristic cadence. 9. Strip decoration. Full detail
-in [`SKILL.md`](SKILL.md); lexicons in [`references/banned-words.md`](references/banned-words.md).
+7. Break the rule-of-three. 8. Drop aphoristic cadence / negative listing / dramatic
+fragmentation. 9. Strip decoration. 10. Use active voice, name the actor (no passive, no
+false agency). 11. Cut empty adverbs & lazy extremes. 12. Be specific, not portentous (no
+vague declaratives, meta-commentary, or rhetorical setups). Plus a 1–10 human-judgment
+rubric (Directness, Rhythm, Trust, Authenticity, Density). Full detail in
+[`SKILL.md`](SKILL.md); lexicons in [`references/banned-words.md`](references/banned-words.md).
 
 ## Architecture
 
@@ -140,7 +149,7 @@ SKILL.md                  command family + routing + levers
 references/               one flow per command + banned-words reference
 scripts/
   lexicons.mjs            word/phrase lists (data)
-  registry/rules.mjs      29 rules as metadata + scoring + mode/provider gating
+  registry/rules.mjs      40 rules as metadata + scoring + mode/provider gating
   engines/lexical.mjs     phrase & regex matchers
   engines/stylometry.mjs  burstiness, TTR, comma/paragraph stats, contractions
   storage.mjs             per-file slop-score trend
@@ -164,3 +173,12 @@ matching engine, add any phrases to `lexicons.mjs`.
 MIT — see [LICENSE](LICENSE).
 
 Built with [impeccable](https://github.com/)'s detector architecture as the blueprint.
+
+## Credits
+
+Editorial tells — passive voice, false agency, empty adverbs, vague declaratives,
+meta-commentary, rhetorical setups, negative listing, lazy extremes, and the 1–10
+human-judgment rubric — were absorbed from [stop-slop](https://github.com/hardikpandya/stop-slop)
+by Hardik Pandya (MIT). Word lists also draw on anti-ai-slop-writing, harshaneel/humanize,
+shannhk/avoid-slop, MohamedAbdallah-14/unslop, brandonwise/humanizer, and Wikipedia's
+"Signs of AI writing."

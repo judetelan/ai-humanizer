@@ -17,10 +17,11 @@ keeping meaning and the author's voice. Works on any text the user pastes.
 4. **Triage.** Don't "fix" quoted examples, literal domain terms, or anything whose removal
    distorts meaning. Over-correction is its own tell.
 
-## The nine rewrite levers
+## The rewrite levers
 
 1. **Cut throat-clearing openers** — Certainly, In today's world, It's worth noting,
-   Moreover, Furthermore, Additionally, Ultimately. Start on the assertion.
+   Moreover, Furthermore, Additionally, Ultimately, It turns out, The truth is. Start on the
+   assertion.
 2. **Drop AI vocabulary** — delve, leverage, robust, seamless, vibrant, tapestry, realm,
    underscore, pivotal, testament, bolster, garner, harness, showcase, utilize, facilitate,
    boasts, nestled, cornerstone, paradigm. Use plain, specific words.
@@ -34,12 +35,35 @@ keeping meaning and the author's voice. Works on any text the user pastes.
 6. **Hedge surgery** — cut generally speaking, arguably, in most cases, it could be argued,
    unless the uncertainty is real and specific.
 7. **Break the rule-of-three** — stop defaulting to "X, Y, and Z" triads.
-8. **Drop aphoristic cadence** — "It's not just a tool. It's a revolution." / "No fluff.
-   Just results." / "Not an X. A Y." Say it plainly.
+8. **Drop manufactured cadence** — aphoristic contrast ("It's not just a tool. It's a
+   revolution." / "Not an X. A Y."), negative listing ("Not X… Not Y… Z"), and dramatic
+   fragmentation ("That's it. That's the…"). Say it plainly.
 9. **Strip decoration & artifacts** — emoji bullets, ✓/🚀 badges, **Label:** colon lists,
    01/02/03 markers, wordy connectives ("due to the fact that" → because), weasel sourcing
    ("studies show"), assistant closers ("I hope this helps", "feel free to"), and any raw
    model artifacts (`citeturn`, `utm_source=chatgpt.com`, unfilled `[placeholders]`).
+10. **Use active voice, name the actor** — kill agentless passives ("mistakes were made",
+    "it is believed that") and false agency ("the data tells us", "the decision emerges",
+    "the market rewards"). A person did it — say who, or put the reader in the seat with "you."
+11. **Cut empty adverbs & lazy extremes** — really, just, simply, actually, genuinely,
+    honestly, truly; and sweeping absolutes (everyone, always, never, nobody). Replace with
+    the specific.
+12. **Be specific, not portentous** — drop vague declaratives ("the implications are
+    significant", "the stakes are high"), meta-commentary ("the rest of this essay…", "let me
+    walk you through"), rhetorical setups ("what if I told you", "think about it", "and that's
+    okay"), and emphasis crutches ("let that sink in", "make no mistake"). Name the concrete
+    thing; let the reader draw the conclusion.
+
+### Human-judgment rubric
+
+After rewriting, rate each 1–10 (below ~7 on any axis → revise). The score catches patterns;
+this catches what regex can't:
+
+- **Directness** — statements, or announcements about statements?
+- **Rhythm** — varied sentence lengths, or metronomic?
+- **Trust** — respects the reader's intelligence (no hand-holding)?
+- **Authenticity** — does a person sound like they wrote this?
+- **Density** — anything cuttable without losing meaning?
 
 ## Triage — not every match is a defect
 
@@ -76,6 +100,19 @@ WEASEL = ["experts say","studies show","research suggests","it is believed that"
 CLOSERS = ["i hope this helps","feel free to","happy to help","you're absolutely right",
  "that's an excellent point","i'd be happy to","please don't hesitate"]
 ARTIFACTS = ["citeturn","oaicite","utm_source=chatgpt.com","[your name]","contentReference"]
+# absorbed from stop-slop
+RHETORICAL = ["what if i told you","here's what i mean","think about it","and that's okay",
+ "ask yourself","here's the kicker","hear me out"]
+META = ["the rest of this essay","walk you through","in this section","as we'll see",
+ "i want to explore","plot twist:","spoiler:","let me explain"]
+EMPHASIS = ["let that sink in","make no mistake","this matters because","let me be clear",
+ "read that again","the uncomfortable truth is","mark my words"]
+VAGUE = ["the reasons are structural","the implications are significant","the stakes are high",
+ "the consequences are real","the importance cannot be overstated"]
+ADVERBS = ["really","just","literally","genuinely","honestly","simply","actually","truly","deeply"]
+EXTREMES = ["everyone","everybody","nobody","no one","always","never","everything","nothing"]
+FA_NOUNS = "data|market|markets|culture|conversation|decision|complaint|narrative|story|algorithm|technology|system|process|numbers|metrics|code|model|product|strategy|truth|answer|question"
+FA_VERBS = "tells|rewards|decides|emerges|shifts|moves|knows|wants|believes|demands|chooses|understands|realizes|feels|thinks|speaks|listens|reveals|suggests|reminds|becomes"
 
 def score(text, mode="both"):
     t = re.sub(r"`[^`]*`"," ", text); low = t.lower()
@@ -96,6 +133,20 @@ def score(text, mode="both"):
     add("plays-a-role", len(re.findall(r"\bplays? an? (crucial|vital|pivotal|key|significant|central|important) role\b", low)), 3)
     add("aphoristic", len(re.findall(r"\bnot just [^.,;]{2,50},?\s+(it'?s|but)\b", low)), 5)
     triads = len(re.findall(r"\b\w+, \w+,? and \w+\b", t)); add("rule-of-three", triads if triads>=3 else 0, 3)
+    # absorbed from stop-slop
+    add("rhetorical-setup", sum(low.count(w) for w in RHETORICAL), 4)
+    add("meta-commentary", sum(low.count(w) for w in META), 3)
+    add("emphasis-crutch", sum(low.count(w) for w in EMPHASIS), 3)
+    add("vague-declarative", sum(low.count(w) for w in VAGUE), 3)
+    fa = len(re.findall(r"\bthe ("+FA_NOUNS+r") ("+FA_VERBS+r")\b", low))
+    add("false-agency", fa if fa>=2 else 0, 4)
+    passive = len(re.findall(r"\b(is|are|was|were|be|been|being)\s+(\w+ly\s+)?(created|made|designed|built|written|reached|believed|considered|regarded|viewed|seen|known|described|defined|achieved|implemented|developed|established|produced|determined|provided|required)\b", low))
+    if mode!="marketing" and passive>=3 and passive/max(1,len(t.split())/120)>=1: add("passive-voice", passive, 2)
+    if mode!="marketing":
+        adv = sum(len(re.findall(r"\b"+re.escape(w)+r"\b", low)) for w in ADVERBS)
+        if adv>=4 and adv/max(1,len(t.split())/100)>=0.8: add("adverb-filler", adv, 2)
+        ext = sum(len(re.findall(r"\b"+re.escape(w)+r"\b", low)) for w in EXTREMES)
+        if ext>=4: add("lazy-extremes", ext, 2)
     # burstiness
     sents = [s for s in re.split(r"(?<=[.!?])\s+", t) if len(s.split())>=3]
     if len(sents)>=6:
