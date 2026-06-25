@@ -199,13 +199,16 @@ Then restart Claude Code (or `/skills`) so it re-reads `SKILL.md`. If you never 
 files, `git pull` is clean; if you made local tweaks, `git stash` first, pull, then
 `git stash pop`. No `npm install` step — the detector is dependency-free.
 
-**claude.ai / Claude Desktop — Option A (uploaded Skill).** Skills don't auto-update, so
-replace the old one:
+**claude.ai / Claude Desktop — Option A (uploaded Skill).** Skills don't auto-update from
+GitHub — you replace the uploaded copy. No terminal needed:
 
-1. Rebuild the zip from the latest code (re-download **Code ▸ Download ZIP**, or
-   `git pull` then re-zip as in the install steps).
-2. **Settings ▸ Capabilities ▸ Skills** → delete the old `ai-humanizer` → **Upload skill**
-   with the new zip.
+1. Get the latest zip: on the repo click **Code ▸ Download ZIP** (always the newest `main`).
+   *(Developers can instead `git pull` and re-zip as in the install steps.)*
+2. In the app: **Settings ▸ Capabilities** → confirm **Code execution** is on → open the
+   **Skills** list.
+3. **Delete** the existing `ai-humanizer` skill, then **Upload skill** with the new zip.
+4. Open a **new chat** — existing chats keep the old version loaded. Ask it to "score this"
+   to confirm it reflects the latest rules.
 
 **Any tool — Option B (portable paste).** The portable file changes when rules are added, so
 re-copy it:
