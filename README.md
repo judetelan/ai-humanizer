@@ -128,12 +128,43 @@ Flags: `--mode prose|marketing|both`, `--gpt|--claude|--gemini`, `--features`, `
 }
 ```
 
-### claude.ai (Skills)
+### claude.ai & Claude Desktop (Skills)
 
-Requires a paid plan with the Skills capability. Settings → Capabilities/Skills → create a
-skill, then either upload this repo as a zip or paste `portable/ai-humanizer.md` as the
-instructions (name it `ai-humanizer`). The portable file includes an embedded Python
-scorer that runs in claude.ai's code tool, so you still get an objective slop number.
+Skills are tied to your Claude account, so once you add ai-humanizer on the web it shows up
+in **Claude Desktop** too (same login). You need a **paid plan** with **Code execution**
+turned on. Two ways to use it — pick one.
+
+#### Option A — upload as a Skill (gets you the `humanize`/`check`/`audit` commands)
+
+1. Download the repo as a zip: on GitHub click **Code ▸ Download ZIP**, or build one
+   locally so `SKILL.md` sits at the zip's top level:
+   ```bash
+   git clone https://github.com/judetelan/ai-humanizer.git
+   cd ai-humanizer && zip -r ../ai-humanizer.zip .        # macOS/Linux/Git Bash
+   # Windows PowerShell:  Compress-Archive -Path * -DestinationPath ..\ai-humanizer.zip
+   ```
+2. In claude.ai (or Claude Desktop): **Settings ▸ Capabilities** → enable **Code
+   execution**.
+3. Open the **Skills** section → **Upload skill** → choose `ai-humanizer.zip`.
+4. Start a new chat and just ask: *"humanize the text I paste next"* / *"score this draft."*
+   Claude loads the skill and runs the bundled scorer in its sandbox.
+
+#### Option B — paste the portable file (fastest, no zip)
+
+The single file `portable/ai-humanizer.md` is fully self-contained (levers + an embedded
+**Python** scorer that runs in Claude's code tool).
+
+1. Open [`portable/ai-humanizer.md`](portable/ai-humanizer.md) and copy the whole file.
+2. **For one chat:** paste it in and say *"Read this and use it to humanize the text I
+   paste next."*
+   **For reuse:** create a **Project** → paste it into the project's **custom
+   instructions** → every chat in that project has it on tap.
+3. Ask it to *"score this with the humanizer scorer"* and it'll run the embedded Python for
+   an objective slop number; or *"humanize this"* to get the rewrite.
+
+> **Tip:** the very fastest path is to paste the raw link from
+> [Quickest start](#quickest-start--give-an-llm-this-link) and tell Claude to fetch and use
+> it — no copy-paste of the whole file.
 
 ### ChatGPT
 
@@ -150,6 +181,47 @@ The Node CLI won't run in ChatGPT, but the guidance + Python scorer port cleanly
 - **Gem:** Gemini → Gems → New Gem → paste `portable/ai-humanizer.md` into the
   instructions. With code execution on, it can run the Python scorer.
 - **Per-chat:** paste the portable file and ask it to apply the levers.
+
+---
+
+## Updating to the latest version
+
+How you update depends on how you installed it.
+
+**Claude Code (git clone).** Pull the latest into the skill folder:
+
+```bash
+cd ~/.claude/skills/ai-humanizer        # or <project>/.claude/skills/ai-humanizer
+git pull
+```
+
+Then restart Claude Code (or `/skills`) so it re-reads `SKILL.md`. If you never edited the
+files, `git pull` is clean; if you made local tweaks, `git stash` first, pull, then
+`git stash pop`. No `npm install` step — the detector is dependency-free.
+
+**claude.ai / Claude Desktop — Option A (uploaded Skill).** Skills don't auto-update, so
+replace the old one:
+
+1. Rebuild the zip from the latest code (re-download **Code ▸ Download ZIP**, or
+   `git pull` then re-zip as in the install steps).
+2. **Settings ▸ Capabilities ▸ Skills** → delete the old `ai-humanizer` → **Upload skill**
+   with the new zip.
+
+**Any tool — Option B (portable paste).** The portable file changes when rules are added, so
+re-copy it:
+
+1. Open the newest [`portable/ai-humanizer.md`](portable/ai-humanizer.md) and copy it again.
+2. Replace the old text in your Project custom instructions / Custom GPT / Gem.
+   (If you used the raw-link method, you're always on latest — nothing to do.)
+
+**Check your version.** Compare your local commit to the repo:
+
+```bash
+cd ~/.claude/skills/ai-humanizer && git log -1 --oneline
+```
+
+The rule count is the quickest sanity check — current is **40 rules**
+(`grep -c "id:" scripts/registry/rules.mjs`).
 
 ---
 
