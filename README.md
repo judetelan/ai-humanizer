@@ -226,6 +226,20 @@ cd ~/.claude/skills/ai-humanizer && git log -1 --oneline
 The rule count is the quickest sanity check — current is **40 rules**
 (`grep -c "id:" scripts/registry/rules.mjs`).
 
+### Can I just ask Claude to update or run it?
+
+Depends on where you're running it:
+
+| Environment | Ask Claude in chat to **update** it? | Ask Claude in chat to **use** it? |
+|---|---|---|
+| **Claude Code** (terminal) | ✅ Yes — *"update the ai-humanizer skill"* runs `git pull` in the skill folder | ✅ Yes — *"humanize this file"*, *"is this AI?"* |
+| **claude.ai / Claude Desktop** | ❌ No — skills are managed in **Settings ▸ Capabilities ▸ Skills**; the model can't add, delete, or re-upload them from a conversation | ✅ Yes — *"score the text I paste next"* (once the skill or portable file is loaded) |
+
+On claude.ai, dragging the zip into a chat does **not** install it — that only attaches it as
+a document for that one conversation. Installing and updating always go through Settings (see
+[Updating to the latest version](#updating-to-the-latest-version) above). Using it, however,
+is always just a plain-language ask.
+
 ---
 
 ## The rewrite levers
