@@ -15,10 +15,13 @@ more specific word.
 `multifaceted` · `nuanced` · `intricate` · `meticulous` · `elevate` · `unleash` ·
 `unlock the` · `embark` · `myriad` · `plethora` · `paramount` · `crucial` · `cutting-edge` ·
 `in the realm of` · `rich tapestry` · `ever-evolving` · `ever-changing` · `landscape of` ·
-`at the forefront` · `beacon of` · `treasure trove`
+`at the forefront` · `beacon of` · `treasure trove` · `enduring` · `steeped in` ·
+`stunning` · `must-visit` · `actionable` · `impactful` · `unpack` · `enhancing` ·
+`emphasizing` · `highlighting` · `showcasing` · `boasts a rich heritage`
 
 **Swap examples:** delve → look at / dig into · leverage → use · robust → reliable / solid ·
-seamless → smooth / no setup · myriad → many · utilize → use · facilitate → help.
+seamless → smooth / no setup · myriad → many · utilize → use · facilitate → help ·
+actionable → specific / concrete · impactful → significant / effective · unpack → explain.
 
 ## Throat-clearing & connective openers
 
@@ -31,6 +34,34 @@ Cut, or replace with the assertion itself. Listing two adjacent connectives
 `At the end of the day` · `When it comes to` · `In conclusion` · `To sum up` ·
 `In summary` · `Moreover,` · `Furthermore,` · `Additionally,` · `Ultimately,` ·
 `That being said` · `Rest assured`
+
+## RLHF instruction-tuning voice
+
+Patterns from the instruction-tuning (RLHF) process that create a distinctive
+"helpful assistant" voice. The May 2026 paper (arXiv 2605.19516) showed these
+are the primary signal AI detectors fire on — more than vocabulary.
+
+`on one hand` / `on the other hand` · `that's a great question` ·
+`while I understand` · `it's important to consider` · `there are several` ·
+`let me clarify` · `I should mention` · `I should note that` ·
+`as of my training cutoff` · `based on what I know up to`
+
+## Reasoning chain leaks
+
+Chain-of-thought artifacts that leak into published text. Common as reasoning
+models (o1, Claude extended thinking) become default.
+
+`let me think` · `let's reason through` · `step 1:` / `step 2:` ·
+`breaking this down` · `if we break this down` · `let's consider` ·
+`let me work through` · `if we think about`
+
+## Acknowledgment loops
+
+Restating the question before answering. A chatbot reflex.
+
+`you're asking about` · `you're wondering` · `you want to know` ·
+`great observation` · `that's an interesting question` ·
+`you raise a good point` · `that's a fair question`
 
 ## Marketing / SaaS buzzwords (marketing mode weights these up)
 
@@ -178,18 +209,29 @@ stop-slop's replacement table, used when humanizing:
 | circle back | return to, revisit |
 | on the same page | aligned, agreed |
 
-## Model-specific tics (gated: --gpt / --claude / --gemini)
+## Model-specific tics (gated: --gpt / --claude / --gemini / --grok / --deepseek)
 
 - **GPT:** `rich tapestry` · `navigating the complexities` · `plays a crucial/vital role` ·
-  `a testament to` · `characterized by` · `Sure! Here's`
+  `a testament to` · `characterized by` · `Sure! Here's` · `emphasizing` · `enhance` ·
+  `highlighting` · `showcasing`
 - **Claude:** `I'll help you` · `Let me` · `Here's` · `Great question` · `to be clear` ·
-  `you're absolutely right`
+  `you're absolutely right` · `load-bearing` · `worth stating plainly` ·
+  `carry the argument` · `I should note` · `one might argue`
 - **Gemini:** `paving the way` · `a symphony of` · `the cascade of` · `in the grand tapestry`
+- **Grok:** `causal` · `empirical` · `correlate` · `underscore` · `X rather than Y`
+  (reversal construction) · `grok_card` · `grok_render_citation_card_json` (markup leaks)
+- **DeepSeek:** lenticular brackets (〔〕) · dagger symbols (†) in output (markup leaks)
 
 ## Structural / cadence tells (no word list — pattern-matched)
 
 - **Em-dash overuse** — the loudest punctuation tell. Several × human rate. Keep rare.
+  Note (July 2026): only Claude still overuses em-dashes versus professional writers.
+  GPT-5.1 actively suppresses them. The em-dash rule is most diagnostic for Claude output.
 - **Uniform sentence rhythm** — low length variance (low burstiness). Vary deliberately.
+- **Sentence-length spread** — longest minus shortest sentence should differ by 20+ words.
+  No three consecutive sentences within 5 words of each other in length.
+- **Excessive structure** — too many markdown headers, bullet points, and numbered lists
+  relative to word count. AI over-formats; prose would do.
 - **Rule-of-three** — reflexive "X, Y, and Z" triads. Break the pattern.
 - **Aphoristic cadence** — "Not an X. A Y." / "No fluff. Just results." / "It's not just
   X, it's Y." Manufactured contrast.

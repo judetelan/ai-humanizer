@@ -20,7 +20,7 @@ const RULES = [
   {
     id: 'em-dash-overuse', category: 'cadence', engine: 'lexical', severity: 'warning',
     name: 'Em-dash overuse', modes: ['prose', 'marketing', 'both'], weight: 6,
-    description: 'Em-dashes at several times the human rate. Keep them rare; vary with commas, periods, colons, parentheses.',
+    description: 'Em-dashes at several times the human rate. As of 2026, primarily a Claude tell; GPT-5 actively suppresses them. Vary with commas, periods, colons, parentheses.',
   },
   {
     id: 'banned-vocab', category: 'lexical', engine: 'lexical', severity: 'warning',
@@ -89,6 +89,21 @@ const RULES = [
     description: 'Sycophantic assistant register ("I hope this helps", "feel free to", "you\'re absolutely right"). Strip it.',
   },
   {
+    id: 'rlhf-artifacts', category: 'lexical', engine: 'lexical', severity: 'warning',
+    name: 'RLHF instruction-tuning voice', modes: ['prose', 'marketing', 'both'], weight: 5,
+    description: 'Balanced tradeoffs, structured enumeration, pedagogical scaffolding, and hedged disagreement that RLHF training produces. The primary signal detectors fire on.',
+  },
+  {
+    id: 'reasoning-chain-leak', category: 'lexical', engine: 'lexical', severity: 'warning',
+    name: 'Reasoning chain leak', modes: ['prose', 'marketing', 'both'], weight: 5,
+    description: 'Chain-of-thought artifacts leaked into prose ("Let me think...", "Step 1:"). Strip the scaffolding; present the conclusion.',
+  },
+  {
+    id: 'acknowledgment-loop', category: 'lexical', engine: 'lexical', severity: 'warning',
+    name: 'Acknowledgment loop', modes: ['prose', 'marketing', 'both'], weight: 4,
+    description: 'Parroting the question back ("You\'re asking about..."). Answer directly without restating what was asked.',
+  },
+  {
     id: 'conclusion-fluff', category: 'lexical', engine: 'lexical', severity: 'info',
     name: 'Weightless conclusion', modes: ['prose', 'marketing', 'both'], weight: 3,
     description: 'Generic closers ("the future looks bright", "the possibilities are endless"). End on something specific.',
@@ -111,7 +126,7 @@ const RULES = [
   {
     id: 'llm-artifact-leak', category: 'formatting', engine: 'lexical', severity: 'warning',
     name: 'LLM artifact leak', modes: ['prose', 'marketing', 'both'], weight: 12,
-    description: 'Raw model artifacts shipped in text (citeturn/oaicite, utm_source=chatgpt.com, unfilled [placeholders]). Remove before publishing.',
+    description: 'Raw model artifacts shipped in text (oaicite, grok_card, DeepSeek brackets, Perplexity tags, :::writing markers, unfilled [placeholders]). Remove before publishing.',
   },
   {
     id: 'smart-punctuation-leak', category: 'formatting', engine: 'lexical', severity: 'advisory',
@@ -122,6 +137,12 @@ const RULES = [
     id: 'bold-label-list', category: 'formatting', engine: 'lexical', severity: 'info',
     name: 'Bold-label colon list', modes: ['prose', 'marketing', 'both'], weight: 3,
     description: 'Repeated "**Label:** description" bullets are an AI formatting reflex. Use prose or plain lists.',
+  },
+
+  {
+    id: 'excessive-structure', category: 'formatting', engine: 'stylometry', severity: 'info',
+    name: 'Excessive structure', modes: ['prose', 'marketing', 'both'], weight: 3,
+    description: 'Over-formatted responses with too many headers, bullets, and numbered lists relative to word count. AI reflex; reduce scaffolding.',
   },
 
   // ── Absorbed from stop-slop (editorial tells) ─────────────────────────────
@@ -223,6 +244,16 @@ const RULES = [
     id: 'gemini-tics', category: 'lexical', engine: 'lexical', severity: 'advisory', gated: 'gemini',
     name: 'Gemini-style tics', modes: ['prose', 'marketing', 'both'], weight: 4,
     description: 'Recurring Gemini phrasings ("paving the way", "a symphony of", "the cascade of"). Rephrase plainly.',
+  },
+  {
+    id: 'grok-tics', category: 'lexical', engine: 'lexical', severity: 'advisory', gated: 'grok',
+    name: 'Grok-style tics', modes: ['prose', 'marketing', 'both'], weight: 4,
+    description: 'Recurring Grok phrasings (causal, empirical, correlate, underscore) and markup artifacts. Rephrase plainly.',
+  },
+  {
+    id: 'deepseek-tics', category: 'lexical', engine: 'lexical', severity: 'advisory', gated: 'deepseek',
+    name: 'DeepSeek-style tics', modes: ['prose', 'marketing', 'both'], weight: 4,
+    description: 'DeepSeek markup artifacts (lenticular brackets, dagger symbols). Remove before publishing.',
   },
 ];
 

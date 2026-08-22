@@ -48,9 +48,14 @@ const DETECTORS = {
   },
 
   'low-lexical-diversity'(ctx, f) {
-    // TTR falls with length, so only judge on samples long enough to be meaningful.
     if (f.wordCount < 120) return [];
-    if (f.typeTokenRatio >= 0.42) return [];
+    // TTR drops with length; adjust threshold. Short texts: 0.42, long: 0.15.
+    const threshold = f.wordCount < 500 ? 0.42
+      : f.wordCount < 2000 ? 0.32
+      : f.wordCount < 5000 ? 0.24
+      : f.wordCount < 10000 ? 0.19
+      : 0.15;
+    if (f.typeTokenRatio >= threshold) return [];
     return [finding('low-lexical-diversity', 'info',
       `Low type-token ratio (${f.typeTokenRatio} over ${f.wordCount} words). Repetitive vocabulary; vary word choice and cut filler.`, 0)];
   },
@@ -66,6 +71,35 @@ const DETECTORS = {
     if (f.paraLenCV >= 0.25) return [];
     return [finding('paragraph-uniformity', 'advisory',
       `Near-uniform paragraph length (CV ${f.paraLenCV} across ${f.paragraphCount} paragraphs). Vary paragraph size for a human shape.`, 0)];
+  },
+
+  'excessive-structure'(ctx, f) {
+    if (f.wordCount < 200) return [];
+    const headers = (ctx.raw.match(/^\s{0,3}#{1,6}\s/gm) || []).length;
+    const bullets = (ctx.raw.match(/^\s*[-*+]\s/gm) || []).length;
+    const numbered = (ctx.raw.match(/^\s*\d+[.)]\s/gm) || []).length;
+    const total = headers + bullets + numbered;
+    const rate = total / (f.wordCount / 100);
+    if (rate < 3) return [];
+    return [finding('excessive-structure', 'info',
+      `High structural markup density (${total} headers/bullets/numbers, ~${rate.toFixed(1)} per 100 words). AI formatting reflex; reduce scaffolding where prose would do.`, 0, '', total)];
+  },
+
+  'sentence-spread'(ctx, f) {
+    if (f.sentenceCount < 8) return [];
+    const sentLens = ctx.sentences.map((s) => s.split(/\s+/).filter(Boolean).length);
+    const issues = [];
+    const spread = f.sentLenMax - f.sentLenMin;
+    if (spread < 20) issues.push(`spread only ${spread} words (aim for 20+)`);
+    let consecutive = 0;
+    for (let i = 2; i < sentLens.length; i++) {
+      const range = Math.max(sentLens[i], sentLens[i-1], sentLens[i-2]) - Math.min(sentLens[i], sentLens[i-1], sentLens[i-2]);
+      if (range <= 5) consecutive++;
+    }
+    if (consecutive > 2) issues.push(`${consecutive} runs of 3+ same-length sentences`);
+    if (!issues.length) return [];
+    return [finding('sentence-spread', 'advisory',
+      `Sentence-length monotony: ${issues.join('; ')}. Vary rhythm with one very short sentence then a long one.`, 0, '', issues.length)];
   },
 
   'contraction-absence'(ctx, f) {

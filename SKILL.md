@@ -1,6 +1,6 @@
 ---
 name: ai-humanizer
-description: Detects and removes AI writing tells so text reads like a human wrote it. Use when the user wants to humanize, de-slop, de-AI, score, audit, or clean up writing — prose (docs, READMEs, articles, emails) or marketing/web copy. Covers em-dash overuse, AI vocabulary (delve/leverage/robust), throat-clearing openers (moreover/furthermore), SaaS buzzwords, hedging, uniform sentence rhythm, lexical diversity, the "not X, but Y" cadence, rule-of-three, emoji decoration, model-specific tics, plus editorial tells absorbed from stop-slop — passive voice, false agency ("the data tells us"), empty adverbs, vague declaratives, meta-commentary, rhetorical setups, negative listing, and lazy extremes. Pairs a deterministic two-engine detector with rewrite guidance, modeled on the impeccable design skill.
+description: Detects and removes AI writing tells so text reads like a human wrote it. Use when the user wants to humanize, de-slop, de-AI, score, audit, or clean up writing — prose (docs, READMEs, articles, emails) or marketing/web copy. Covers em-dash overuse, AI vocabulary (delve/leverage/robust), throat-clearing openers (moreover/furthermore), SaaS buzzwords, hedging, uniform sentence rhythm, lexical diversity, the "not X, but Y" cadence, rule-of-three, emoji decoration, model-specific tics (GPT/Claude/Gemini/Grok/DeepSeek), RLHF instruction-tuning voice (balanced tradeoffs, pedagogical scaffolding, acknowledgment prefixes), reasoning chain leaks, plus editorial tells absorbed from stop-slop — passive voice, false agency ("the data tells us"), empty adverbs, vague declaratives, meta-commentary, rhetorical setups, negative listing, and lazy extremes. Pairs a deterministic two-engine detector with rewrite guidance, modeled on the impeccable design skill.
 ---
 
 # AI Humanizer
@@ -57,7 +57,7 @@ echo "text" | node .claude/skills/ai-humanizer/scripts/humanize-detect.mjs --std
 | Option | Effect |
 |---|---|
 | `--mode prose\|marketing\|both` | lever set (default `both`); marketing weights buzzwords up, rhythm/hedging down |
-| `--gpt` / `--claude` / `--gemini` | enable model-specific tic rules (off by default) |
+| `--gpt` / `--claude` / `--gemini` / `--grok` / `--deepseek` | enable model-specific tic rules (off by default) |
 | `--features` | print stylometry (sentence CV, TTR, comma density, paragraph CV) |
 | `--trend` | record the score and print the per-file trend |
 | `--json` | machine-readable output |
@@ -94,6 +94,14 @@ Full lexicons + rationale: [references/banned-words.md](references/banned-words.
     significant"), meta-commentary ("the rest of this essay…"), rhetorical setups ("what if
     I told you", "think about it"), and emphasis crutches ("let that sink in"). Name the
     concrete thing; let the reader draw the conclusion.
+13. **Strip RLHF voice** — balanced tradeoffs ("On one hand X, on the other"), pedagogical
+    scaffolding (defining terms the reader already knows), acknowledgment prefixes ("That's
+    a great question"), hedged disagreement ("While I understand X, I would suggest Y"),
+    and closing summaries that recap what was just said. These are the primary signal
+    detectors fire on (arXiv 2605.19516, May 2026).
+14. **Kill reasoning chain leaks** — "Let me think through this", "Step 1:", "Breaking this
+    down", "If we consider". Chain-of-thought artifacts that belong in a model's scratchpad,
+    not in published prose.
 
 ### Human-judgment rubric (absorbed from stop-slop)
 

@@ -30,6 +30,11 @@ export const BANNED_VOCAB = [
   'breathtaking', 'renowned', 'nestled', 'boasts', 'unparalleled',
   'state-of-the-art', 'synergy', 'synergies', 'utilize', 'utilizing', 'facilitate',
   'paradigm', 'indelible', 'delve into',
+  // 2026 additions (stop-slop, unslop, brandonwise, Wikipedia)
+  'enduring', 'stunning', 'must-visit', 'steeped in',
+  'actionable', 'impactful', 'unpack', 'unpacking',
+  'enhancing', 'emphasizing', 'highlighting',
+  'boasts a rich heritage',
 ];
 
 // Throat-clearing / RLHF openers and connective scaffolding.
@@ -48,6 +53,11 @@ export const AI_OPENERS = [
   // stop-slop throat-clearers
   "it turns out", "the truth is", "let's be honest", "can we talk about",
   "the real question is", "in a world where",
+  // 2026 additions (stop-slop Jan 2026, no-ai-slop, unslop)
+  "here's what i find interesting", "here's the problem though",
+  "what nobody tells you", "the part everyone misses",
+  "at its core,", "in reality,",
+  "here's what you need to know", "let's break this down", "let's dive in",
 ];
 
 // SaaS marketing filler.
@@ -94,8 +104,10 @@ export const WEASEL_ATTRIBUTION = [
 
 // Copula avoidance — inflated verbs where "is/has" would do.
 export const COPULA_AVOID = [
-  'serves as', 'stands as', 'functions as', 'acts as a testament',
+  'serves as', 'served as', 'stands as', 'functions as', 'acts as a testament',
   'represents a', 'embodies the', 'exemplifies the',
+  // 2026 additions (unslop copula expansion)
+  'features a', 'features an', 'boasted', 'boasting',
 ];
 
 // Sycophantic / assistant closers and openers.
@@ -106,6 +118,8 @@ export const CHATBOT_CLOSERS = [
   'would you like me to', "you're absolutely right", "that's an excellent point",
   'excellent point', 'what a thoughtful question', "i'd be happy to",
   'here is an overview', 'here is a summary', 'here is a breakdown',
+  // 2026 additions (harshaneel)
+  'happy to jump on a call', 'looking forward to connecting',
 ];
 
 // Generic, weightless conclusions.
@@ -133,6 +147,8 @@ export const BUSINESS_JARGON = [
 export const ADVERB_FILLER = [
   'really', 'just', 'literally', 'genuinely', 'honestly', 'simply', 'actually',
   'truly', 'deeply', 'basically', 'totally', 'frankly', 'surely', 'undoubtedly',
+  // 2026 additions (stop-slop Jan 2026 AI intensifiers)
+  'fundamentally', 'inherently', 'inevitably',
 ];
 
 // Lazy extremes — sweeping absolutes that fake authority (stop-slop).
@@ -147,6 +163,8 @@ export const META_COMMENTARY = [
   'in this section', 'in this post', 'in this article', "as we'll see",
   'as we will see', 'i want to explore', 'plot twist:', 'spoiler:',
   'you already know this', "but that's another post", 'let me explain',
+  // 2026 additions (metadiscourse patterns)
+  'as mentioned earlier', 'as discussed above',
 ];
 
 // Rhetorical setups — announce insight instead of delivering it (stop-slop).
@@ -161,6 +179,8 @@ export const EMPHASIS_CRUTCH = [
   'full stop.', 'let that sink in', 'make no mistake', 'this matters because',
   "here's why that matters", 'let me be clear', "i'll say it again", 'read that again',
   'the uncomfortable truth is', 'plain and simple', 'mark my words',
+  // 2026 additions (stop-slop performative emphasis)
+  'i promise', 'they exist, i promise', 'creeps in',
 ];
 
 // Vague declaratives — announce significance without naming the specific thing (stop-slop).
@@ -169,6 +189,9 @@ export const VAGUE_DECLARATIVE = [
   'the stakes are high', 'the consequences are real', 'this is the deepest problem',
   "the stakes couldn't be higher", 'the stakes could not be higher',
   'the significance cannot be overstated', 'the importance cannot be overstated',
+  // 2026 additions (harshaneel authority tropes)
+  'the real question is', 'what really matters', 'the deeper issue',
+  'the heart of the matter',
 ];
 
 // False agency — inanimate subjects given human verbs (stop-slop). Matched as
@@ -206,6 +229,8 @@ export const GPT_TICS = [
   'it is worth noting that', 'plays a crucial role', 'plays a vital role',
   'a testament to', 'underscores the importance', 'sure! here', "here's a",
   'i hope this helps', 'certainly!', 'characterized by', 'it is important to remember',
+  // GPT-5 persistent (2026)
+  'emphasizing', 'enhance', 'showcasing',
 ];
 
 export const CLAUDE_TICS = [
@@ -213,10 +238,54 @@ export const CLAUDE_TICS = [
   "i appreciate", "to be clear", "that said,", "it's worth noting that",
   "a few things", "let's break", "i want to make sure", "you're absolutely right",
   "that's a great", "i should note",
+  // Opus 5 Claudisms (2026)
+  "load-bearing", "worth stating plainly", "carry the argument",
+  "one might argue", "it could be suggested",
 ];
 
 export const GEMINI_TICS = [
   'the way for', 'the cascade of', 'it is not a', 'it is not just a',
   'paving the way', 'a symphony of', 'in the grand tapestry',
   'plays a significant role', 'it is essential to',
+];
+
+// Grok-specific tics (2026 — Wikipedia, community research).
+export const GROK_TICS = [
+  'causal', 'empirical', 'correlate', 'correlates',
+  'grok_card', 'grok_render_citation_card_json',
+];
+
+// DeepSeek markup artifacts (2026 — Wikipedia).
+export const DEEPSEEK_TICS = [
+  '⟨', '⟩', '†', '‡',
+];
+
+// RLHF artifacts — instruction-tuning voice that detectors fire on (arXiv 2605.19516).
+export const RLHF_ARTIFACTS = [
+  'on one hand', 'on the other hand',
+  "that's a great question",
+  'while i understand', 'i would suggest',
+  "it's important to consider",
+  'there are several', 'there are a few',
+  'let me clarify', 'to clarify',
+  'as of my training', 'based on what i know',
+  'i should mention', 'i should point out',
+];
+
+// Reasoning chain leaks — CoT artifacts in published prose (PAN 2026, brandonwise).
+export const REASONING_CHAIN = [
+  'let me think', "let's reason through", "let's work through",
+  'step 1:', 'step 2:', 'step 3:', 'step 4:',
+  "first, let's", "next, let's", "finally, let's",
+  'breaking this down', 'if we break this down',
+  "let's consider", "let's examine",
+];
+
+// Acknowledgment loops — parroting the question back (brandonwise).
+export const ACKNOWLEDGMENT_LOOP = [
+  "you're asking about", "you're wondering",
+  'you want to know', 'you mentioned that',
+  'great observation', "that's an interesting question",
+  "that's a thoughtful question",
+  "i understand you're looking for",
 ];

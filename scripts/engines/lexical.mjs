@@ -10,9 +10,11 @@
 import { finding, lineOf, sampleAround, countPhrases } from '../shared/text.mjs';
 import {
   BANNED_VOCAB, AI_OPENERS, BUZZWORDS, HEDGES, GPT_TICS, CLAUDE_TICS, GEMINI_TICS,
+  GROK_TICS, DEEPSEEK_TICS,
   WORDY_CONNECTIVES, WEASEL_ATTRIBUTION, COPULA_AVOID, CHATBOT_CLOSERS,
   CONCLUSION_FLUFF, BUSINESS_JARGON, ADVERB_FILLER, LAZY_EXTREMES, META_COMMENTARY,
   RHETORICAL_SETUP, EMPHASIS_CRUTCH, VAGUE_DECLARATIVE,
+  RLHF_ARTIFACTS, REASONING_CHAIN, ACKNOWLEDGMENT_LOOP,
   FALSE_AGENCY_NOUNS, FALSE_AGENCY_VERBS,
 } from '../lexicons.mjs';
 
@@ -27,7 +29,9 @@ function phraseFinding(ctx, id, severity, phrases, label, opts = {}) {
 
 const DETECTORS = {
   'em-dash-overuse'(ctx) {
-    const re = /[—]|--(?=\S)/g;
+    // Actual em-dashes + typographic double-hyphens used as dashes.
+    // Excludes CLI flags (--mode, --from, --replicas) which are word--letter.
+    const re = /[—]|(?<!\w)--(?![a-zA-Z])/g;
     let count = 0, first = -1, m;
     while ((m = re.exec(ctx.text)) !== null) { count++; if (first < 0) first = m.index; }
     const rate = count / Math.max(1, ctx.wordCount / 150);
@@ -72,6 +76,16 @@ const DETECTORS = {
       { advice: 'Rephrase plainly.' });
   },
 
+  'grok-tics'(ctx) {
+    return phraseFinding(ctx, 'grok-tics', 'advisory', GROK_TICS, 'Grok-style tic(s)',
+      { wordBoundary: true, advice: 'Rephrase plainly.' });
+  },
+
+  'deepseek-tics'(ctx) {
+    return phraseFinding(ctx, 'deepseek-tics', 'advisory', DEEPSEEK_TICS, 'DeepSeek artifact(s)',
+      { advice: 'Remove markup artifacts before publishing.' });
+  },
+
   'wordy-connectives'(ctx) {
     return phraseFinding(ctx, 'wordy-connectives', 'info', WORDY_CONNECTIVES, 'wordy connective(s)',
       { advice: 'Collapse to one word (in order to → to; due to the fact that → because).' });
@@ -90,6 +104,21 @@ const DETECTORS = {
   'chatbot-closer'(ctx) {
     return phraseFinding(ctx, 'chatbot-closer', 'warning', CHATBOT_CLOSERS, 'assistant-register phrase(s)',
       { advice: 'Strip the helpful-assistant voice.' });
+  },
+
+  'rlhf-artifacts'(ctx) {
+    return phraseFinding(ctx, 'rlhf-artifacts', 'warning', RLHF_ARTIFACTS, 'RLHF instruction-tuning phrase(s)',
+      { min: 2, advice: 'Strip the helpful-assistant scaffolding; present the content directly.' });
+  },
+
+  'reasoning-chain-leak'(ctx) {
+    return phraseFinding(ctx, 'reasoning-chain-leak', 'warning', REASONING_CHAIN, 'reasoning-chain artifact(s)',
+      { advice: 'Strip the thinking scaffolding; present the conclusion.' });
+  },
+
+  'acknowledgment-loop'(ctx) {
+    return phraseFinding(ctx, 'acknowledgment-loop', 'warning', ACKNOWLEDGMENT_LOOP, 'acknowledgment loop(s)',
+      { advice: 'Answer directly without restating what was asked.' });
   },
 
   'conclusion-fluff'(ctx) {
@@ -113,7 +142,7 @@ const DETECTORS = {
   },
 
   'ing-trailers'(ctx) {
-    const re = /,\s+(highlighting|underscoring|emphasizing|ensuring|reflecting|symbolizing|showcasing|fostering|cultivating|representing|signaling|allowing for|paving)\b/gi;
+    const re = /,\s+(highlighting|underscoring|emphasizing|ensuring|reflecting|symbolizing|showcasing|fostering|cultivating|representing|signaling|allowing for|paving|demonstrating|illustrating|reinforcing|encapsulating|embodying|transcending|positioning)\b/gi;
     let count = 0, first = -1, m;
     while ((m = re.exec(ctx.text)) !== null) { count++; if (first < 0) first = m.index; }
     if (count < 2) return [];
@@ -123,7 +152,7 @@ const DETECTORS = {
   },
 
   'llm-artifact-leak'(ctx) {
-    const re = /(citeturn\d|oaicite|oai_citation|contentReference|utm_source=chatgpt\.com|grok_card|\[Your Name\]|\[insert [^\]]+\]|\[[A-Z][a-z]+ name\])/gi;
+    const re = /(citeturn\d|oaicite|oai_citation|oai_citation_attribution|contentReference|attributableIndex|turn0search\d|utm_source=chatgpt\.com|grok_card|grok_render_citation_card_json|\[cite:\s*\d+\]|ppl-ai-file-upload|attached_file|:::writing|\[Your Name\]|\[insert [^\]]+\]|\[[A-Z][a-z]+ name\])/gi;
     let count = 0, first = -1, sample = '', m;
     while ((m = re.exec(ctx.raw)) !== null) { count++; if (first < 0) { first = m.index; sample = m[0]; } }
     if (count < 1) return [];
