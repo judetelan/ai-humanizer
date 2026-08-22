@@ -287,9 +287,23 @@ Built with [impeccable](https://github.com/)'s detector architecture as the blue
 
 ## Credits
 
-Editorial tells — passive voice, false agency, empty adverbs, vague declaratives,
-meta-commentary, rhetorical setups, negative listing, lazy extremes, and the 1–10
-human-judgment rubric — were absorbed from [stop-slop](https://github.com/hardikpandya/stop-slop)
-by Hardik Pandya (MIT). Word lists also draw on anti-ai-slop-writing, harshaneel/humanize,
-shannhk/avoid-slop, MohamedAbdallah-14/unslop, brandonwise/humanizer, and Wikipedia's
-"Signs of AI writing."
+Editorial tells (passive voice, false agency, empty adverbs, vague declaratives,
+meta-commentary, rhetorical setups, negative listing, lazy extremes, and the 1-10
+human-judgment rubric) were absorbed from [stop-slop](https://github.com/hardikpandya/stop-slop)
+by Hardik Pandya (MIT), including the March 2026 additions (narrator-from-a-distance,
+telling-not-showing, performative emphasis, absolute adverb bans).
+
+RLHF instruction-tuning voice detection is informed by
+[arXiv 2605.19516](https://arxiv.org/abs/2605.19516) ("Base Models Look Human To AI
+Detectors", May 2026), which demonstrated that RLHF artifacts (balanced tradeoffs,
+pedagogical scaffolding, acknowledgment prefixes) are the primary signal detectors
+fire on.
+
+Word lists, patterns, and detection rules also draw on:
+- [harshaneel/humanize](https://github.com/harshaneel/humanize) (Signal I checklist, sentence-length spread, RLHF phrases)
+- [MohamedAbdallah-14/unslop](https://github.com/MohamedAbdallah-14/unslop) (copula expansion, promotional register, outline-conclusion patterns)
+- [brandonwise/humanizer](https://github.com/brandonwise/humanizer) (reasoning chain leaks, excessive structure, acknowledgment loops, confidence calibration, 500+ vocabulary terms)
+- [petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop) (faux-insight setups, metadiscourse patterns)
+- [jalaalrd/anti-ai-slop-writing](https://github.com/jalaalrd/anti-ai-slop-writing) (cadence uniformity research)
+- [shannhk/avoid-slop](https://github.com/shannhk/avoid-slop) (curated anti-slop directory)
+- Wikipedia's "[Signs of AI writing](https://en.wikipedia.org/wiki/Signs_of_AI_writing)" (model-era vocabulary tracking, Grok/DeepSeek/Perplexity artifact patterns, em-dash provider-specificity research)
