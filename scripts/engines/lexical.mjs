@@ -30,8 +30,9 @@ function phraseFinding(ctx, id, severity, phrases, label, opts = {}) {
 const DETECTORS = {
   'em-dash-overuse'(ctx) {
     // Actual em-dashes + typographic double-hyphens used as dashes.
-    // Excludes CLI flags (--mode, --from, --replicas) which are word--letter.
-    const re = /[—]|(?<!\w)--(?![a-zA-Z])/g;
+    // Excludes: CLI flags (--mode), markdown hr (---+), table separators (|---),
+    // and permission strings (-rwx---).
+    const re = /[—]|(?<![|\w-])--(?![-a-zA-Z])/g;
     let count = 0, first = -1, m;
     while ((m = re.exec(ctx.text)) !== null) { count++; if (first < 0) first = m.index; }
     const rate = count / Math.max(1, ctx.wordCount / 150);
